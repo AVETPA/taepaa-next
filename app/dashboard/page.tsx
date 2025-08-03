@@ -5,13 +5,21 @@ import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import TrainerProfileLink from '@/components/TrainerProfileLink';
 import ProgressCircle from '@/components/ProgressCircle';
-import useUserProfile from '@/hooks/useUserProfile'; // assumes same logic as useAuth
+import useUserProfile from '@/hooks/useUserProfile';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from 'recharts';
 
 export default function DashboardPage() {
   const router = useRouter();
   const supabase = createClientComponentClient();
 
-  const { user, profile, loading } = useUserProfile(); // replace with your actual hook
+  const { user, profile, loading } = useUserProfile();
 
   const [taeCount, setTaeCount] = useState(0);
   const [vocQualCount, setVocQualCount] = useState(0);
@@ -43,7 +51,6 @@ export default function DashboardPage() {
       const in3Months = new Date();
       in3Months.setMonth(now.getMonth() + 3);
 
-      // TAE
       const { data: taeData } = await supabase
         .from('training_products')
         .select('code, status, date_awarded')
@@ -57,7 +64,6 @@ export default function DashboardPage() {
       setTaeCurrentCount(fullTAEQuals.filter((q) => q.status === 'Current').length);
       setTaeSupersededCount(fullTAEQuals.filter((q) => q.status === 'Superseded').length);
 
-      // Vocational
       const { data: vocData } = await supabase
         .from('vocational_qualifications')
         .select('status, type, date_awarded')
@@ -68,7 +74,6 @@ export default function DashboardPage() {
       setVocCurrentCount(fullVocQuals.filter((q) => q.status === 'Current').length);
       setVocSupersededCount(fullVocQuals.filter((q) => q.status === 'Superseded').length);
 
-      // Licences
       const { data: licData } = await supabase
         .from('industry_licences')
         .select('date')
@@ -85,7 +90,6 @@ export default function DashboardPage() {
         }).length
       );
 
-      // PD
       const { data: pdData } = await supabase
         .from('professional_development')
         .select('activity_date, related_to')
@@ -111,7 +115,6 @@ export default function DashboardPage() {
         taePD.length >= 2 && vocPD.length >= 2 ? 'good' : taePD.length || vocPD.length ? 'partial' : 'none'
       );
 
-      // Upcoming Events
       const { data: events } = await supabase
         .from('event_registrations')
         .select('event_id, events(date, title, time, banner_url, type)')
@@ -132,17 +135,40 @@ export default function DashboardPage() {
     );
   }
 
+  const pdPieData = [
+    { name: 'Current', value: pdCurrentCount },
+    { name: 'Outdated', value: pdOutdatedCount },
+  ];
+
+  const COLORS = ['#34D399', '#F87171'];
+
   return (
     <div className="min-h-screen bg-[#f5fbfb] px-6 py-12">
       <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-2xl p-10">
         <TrainerProfileLink />
-        {/* Add UI summary blocks here using taeCount, profile.name, etc. */}
-        <div className="mt-6 text-sm text-gray-700">
-          <p>TAE: {taeCount} ({taeCurrentCount} current, {taeSupersededCount} superseded)</p>
-          <p>Vocational Qualifications: {vocQualCount}</p>
-          <p>Licences: {licenceCount} ({licenceExpiredCount} expired, {expiringLicencesCount} expiring soon)</p>
-          <p>PD Entries: {pdEntryCount} ({pdCurrentCount} current)</p>
-          <p>PD Compliance: {pdCompliance}</p>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10">
+          <ProgressCircle percentage={(taeCurrentCount / (taeCount || 1)) * 100} label="TAE Current" color="green" />
+          <ProgressCircle percentage={(vocCurrentCount / (vocQualCount || 1)) * 100} label="Vocational Current" color="blue" />
+          <ProgressCircle percentage={(licenceCurrentCount / (licenceCount || 1)) * 100} label="Licences Valid" color="orange" />
+          <ProgressCircle percentage={(pdCurrentCount / (pdEntryCount || 1)) * 100} label="PD Currency" color="red" />
+        </div>
+
+        <div className="mt-12">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">PD Compliance Overview</h2>
+          <div className="w-full h-64">
+            <ResponsiveContainer>
+              <PieChart>
+                <Pie data={pdPieData} dataKey="value" nameKey="name" outerRadius={80}>
+                  {pdPieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
     </div>
