@@ -19,7 +19,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const supabase = createClientComponentClient();
 
-  const { authUser: user, profile, loading } = useUserProfile();
+  const { user, profile, loading } = useUserProfile();
 
   const [taeCount, setTaeCount] = useState(0);
   const [vocQualCount, setVocQualCount] = useState(0);
