@@ -1,11 +1,28 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
+import type { User } from "@supabase/auth-helpers-nextjs";
 
-const useUserProfile = () => {
-  const [profile, setProfile] = useState(null);
-  const [authUser, setAuthUser] = useState(null);
+interface UserProfile {
+  uid: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  avatar_url?: string;
+  created_at?: string;
+  [key: string]: any;
+}
+
+const useUserProfile = (): {
+  user: User | null;
+  profile: UserProfile | null;
+  loading: boolean;
+  error: string | null;
+  refreshProfile: () => Promise<void>;
+} => {
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [authUser, setAuthUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchProfile = async () => {
     setLoading(true);
@@ -31,33 +48,28 @@ const useUserProfile = () => {
         .single();
 
       if (profileError && profileError.code !== "PGRST116") {
-        // Ignore "No rows" error if you're okay with empty state
         throw profileError;
       }
 
       if (data) {
         setProfile(data);
       } else {
-        // If no profile exists, you can auto-create it (optional)
         const nameParts = user.user_metadata?.full_name?.split(" ") || [];
-        const newProfile = {
+        const newProfile: UserProfile = {
           uid: user.id,
-          email: user.email,
+          email: user.email ?? "",
           first_name: nameParts[0] || "",
           last_name: nameParts.slice(1).join(" ") || "",
           avatar_url: user.user_metadata?.avatar_url || "",
           created_at: new Date().toISOString(),
         };
 
-        const { error: insertError } = await supabase
-          .from("users")
-          .insert(newProfile);
-
+        const { error: insertError } = await supabase.from("users").insert(newProfile);
         if (insertError) throw insertError;
 
         setProfile(newProfile);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("🔴 Supabase profile error:", err);
       setError(err.message || "Error loading user profile");
     } finally {
@@ -69,7 +81,7 @@ const useUserProfile = () => {
     fetchProfile();
   }, []);
 
-  return { authUser, profile, loading, error, refreshProfile: fetchProfile };
+  return { user: authUser, profile, loading, error, refreshProfile: fetchProfile };
 };
 
 export default useUserProfile;
