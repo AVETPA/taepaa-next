@@ -1,12 +1,16 @@
-import { useParams } from "react-router-dom";
+'use client';
+
 import { useEffect, useState } from "react";
-import { supabase } from "../../lib/supabaseClient";
-import AdminLayout from "../../components/layout/AdminLayout";
+import { useSearchParams } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
+import AdminLayout from "@/components/layout/AdminLayout";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
-import CertificateDocument from "../../components/CertificateDocument";
+import CertificateDocument from "@/components/CertificateDocument";
 
 export default function PDManagerDetail() {
-  const { eventId } = useParams();
+  const searchParams = useSearchParams();
+  const eventId = searchParams.get("eventId");
+
   const [event, setEvent] = useState(null);
   const [registrants, setRegistrants] = useState([]);
   const [showOnlyAttended, setShowOnlyAttended] = useState(false);
@@ -38,14 +42,14 @@ export default function PDManagerDetail() {
         setEvent(eventData);
         setForm({
           title: eventData.title,
-          date: eventData.date.split("T")[0],
+          date: eventData.date?.split("T")[0] || "",
           startTime: eventData.startTime || "",
           endTime: eventData.endTime || "",
-          type: eventData.type,
-          presenter: eventData.presenter,
-          duration: eventData.duration,
-          description: eventData.description,
-          bannerUrl: eventData.bannerUrl,
+          type: eventData.type || "ZoomSession",
+          presenter: eventData.presenter || "",
+          duration: eventData.duration || "",
+          description: eventData.description || "",
+          bannerUrl: eventData.bannerUrl || "",
         });
       }
 
@@ -284,16 +288,18 @@ export default function PDManagerDetail() {
           </div>
         )}
 
-        <div className="mt-4">
-          <PDFDownloadLink
-            document={<CertificateDocument {...previewData} />}
-            fileName="preview-certificate.pdf"
-          >
-            {({ loading }) =>
-              loading ? "Loading preview..." : "Download Certificate Preview"
-            }
-          </PDFDownloadLink>
-        </div>
+        {previewData && (
+          <div className="mt-4">
+            <PDFDownloadLink
+              document={<CertificateDocument {...previewData} />}
+              fileName="preview-certificate.pdf"
+            >
+              {({ loading }) =>
+                loading ? "Loading preview..." : "Download Certificate Preview"
+              }
+            </PDFDownloadLink>
+          </div>
+        )}
       </div>
     </AdminLayout>
   );

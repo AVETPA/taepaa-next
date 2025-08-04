@@ -1,7 +1,9 @@
+'use client';
+
 import { useState } from "react";
-import { supabase } from "../../lib/supabaseClient";
-import { useNavigate } from "react-router-dom";
-import AdminLayout from "../../components/layout/AdminLayout";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
+import AdminLayout from "@/components/layout/AdminLayout";
 
 export default function AdminAddEvent() {
   const [form, setForm] = useState({
@@ -16,7 +18,8 @@ export default function AdminAddEvent() {
     bannerUrl: "",
   });
 
-  const navigate = useNavigate();
+  const [submitting, setSubmitting] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,6 +28,7 @@ export default function AdminAddEvent() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
 
     const newEvent = {
       ...form,
@@ -40,8 +44,10 @@ export default function AdminAddEvent() {
       alert("Error creating event");
     } else {
       alert("Event created successfully");
-      navigate("/admin/pdcalendar");
+      router.push("/admin/pdcalendar");
     }
+
+    setSubmitting(false);
   };
 
   return (
@@ -139,9 +145,10 @@ export default function AdminAddEvent() {
 
           <button
             type="submit"
-            className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700"
+            disabled={submitting}
+            className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 disabled:opacity-50"
           >
-            Save Event
+            {submitting ? "Saving..." : "Save Event"}
           </button>
         </form>
       </div>
