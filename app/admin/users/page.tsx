@@ -1,37 +1,37 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { supabase } from '../../lib/supabaseClient';
-import AdminLayout from '../../components/layout/AdminLayout';
+"use client";
+
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
+import AdminLayout from "@/components/layout/AdminLayout";
+import Link from "next/link";
 
 export default function AdminUserList() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUsersWithProfiles = async () => {
-      // Step 1: Fetch all users
       const { data: baseUsers, error: userError } = await supabase
-        .from('users')
-        .select('id, first_name, surname, email');
+        .from("users")
+        .select("id, first_name, surname, email");
 
-      if (userError) {
-        console.error("User fetch error:", userError.message);
+      if (userError || !baseUsers) {
+        console.error("User fetch error:", userError?.message);
         setLoading(false);
         return;
       }
 
-      // Step 2: Enrich each user with profile data
       const enrichedUsers = await Promise.all(
         baseUsers.map(async (user) => {
           const { count: taeCount } = await supabase
-            .from('trainingProducts')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', user.id);
+            .from("trainingProducts")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", user.id);
 
           const { count: pdCount } = await supabase
-            .from('professionaldevelopment')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', user.id);
+            .from("professionaldevelopment")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", user.id);
 
           return {
             ...user,
@@ -70,11 +70,13 @@ export default function AdminUserList() {
             </tr>
           </thead>
           <tbody>
-            {users.map(user => (
+            {users.map((user) => (
               <tr key={user.id} className="odd:bg-white even:bg-gray-50">
-                <td className="border px-3 py-2">{`${user.first_name || ''} ${user.surname || ''}`.trim() || '—'}</td>
+                <td className="border px-3 py-2">
+                  {`${user.first_name || ""} ${user.surname || ""}`.trim() || "—"}
+                </td>
                 <td className="border px-3 py-2">{user.email || "❌ Not recorded"}</td>
-                <td className="border px-3 py-2">{user.taeCount > 0 ? '✅' : '❌'}</td>
+                <td className="border px-3 py-2">{user.taeCount > 0 ? "✅" : "❌"}</td>
                 <td className="border px-3 py-2">{user.pdCount}</td>
                 <td className="border px-3 py-2">
                   {user.profileComplete ? (
@@ -85,7 +87,7 @@ export default function AdminUserList() {
                 </td>
                 <td className="border px-3 py-2">
                   <Link
-                    to={`/trainerprofile/${user.id}`}
+                    href={`/trainerprofile/${user.id}`}
                     className="text-blue-600 underline hover:text-blue-800"
                   >
                     View Profile
