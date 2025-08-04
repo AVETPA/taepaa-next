@@ -1,13 +1,15 @@
+"use client";
+
 import { useState } from "react";
-import ProfileInfo from "../components/account/ProfileInfo";
-import UserOrders from "../components/account/UserOrders";
-import UserBookings from "../components/account/UserBookings";
-import UserCourses from "../components/account/UserCourses";
-import UserInvoices from "../components/account/UserInvoices";
-import UserSubscriptions from "../components/account/UserSubscriptions";
-import UserMemberships from "../components/account/UserMemberships";
-import TrainerProfileLink from "../components/TrainerProfileLink";
-import PDTracker from "../components/account/PDTracker";
+import ProfileInfo from "@/components/account/ProfileInfo";
+import UserOrders from "@/components/account/UserOrders";
+import UserBookings from "@/components/account/UserBookings";
+import UserCourses from "@/components/account/UserCourses";
+import UserInvoices from "@/components/account/UserInvoices";
+import UserSubscriptions from "@/components/account/UserSubscriptions";
+import UserMemberships from "@/components/account/UserMemberships";
+import TrainerProfileLink from "@/components/TrainerProfileLink";
+import PDTracker from "@/components/account/PDTracker";
 
 const tabs = [
   { title: "Profile Info", component: <ProfileInfo /> },
