@@ -92,7 +92,7 @@ export default function LoginPage() {
             type="button"
             className="flex items-center justify-center w-full gap-2 rounded-md bg-white border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
           >
-            <img src="/img/google-icon.png" alt="Google" className="h-5 w-5" />
+            <img src="/img/google-icon.png" alt="Google" className="h-5 w-15" />
             Sign in with Google
           </button>
 
@@ -101,7 +101,7 @@ export default function LoginPage() {
             type="button"
             className="flex items-center justify-center w-full gap-2 rounded-md bg-white border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
           >
-            <img src="/img/microsoft-icon.png" alt="Microsoft" className="h-5 w-5" />
+            <img src="/img/microsoft-icon.png" alt="Microsoft" className="h-5 w-15" />
             Sign in with Microsoft
           </button>
         </div>

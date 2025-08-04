@@ -1,0 +1,19 @@
+﻿Qualification Code,Qualification Title, Status,Superseded by,Is Equivalent
+TAE40110,Certificate IV in Training and Assessment,Superseded,TAE40116,FALSE
+TAE40116,Certificate IV in Training and Assessment,Superseded,TAE40122,TRUE
+TAE50111,Diploma of Vocational Education and Training,Superseded,TAE50116,FALSE
+TAE50211,Diploma of Training Design and Development,Superseded,TAE50216,TRUE
+TAE50310,Diploma of International Education Services,Deleted,,
+TAE70111,"Vocational Graduate Certificate in Adult Language, Literacy and Numeracy Practice",Superseded,TAE80113,TRUE
+TAE70210,Graduate Certificate in Management (Learning),Superseded,BSB80515,TRUE
+TAE70311,Graduate Certificate in International Education Services,Deleted,,
+TAE80110,"Vocational Graduate Diploma of Adult Language, Literacy and Numeracy Leadership",Superseded,TAE80213,TRUE
+TAE80210,Graduate Diploma of Management (Learning),Superseded,BSB80615,TRUE
+TAE80312,Graduate Certificate in Digital Education,Superseded,TAE80316,TRUE
+TAE40122,Certificate IV in Training and Assessment,Current,,
+TAE50116,Diploma of Vocational Education and Training,Superseded,TAE50122,FALSE
+TAE50122,Diploma of Vocational Education and Training,Current,,
+TAE50216,Diploma of Training Design and Development,Superseded,TAE50122,FALSE
+TAE80113,"Graduate Diploma of Adult Language, Literacy and Numeracy Practice",Current,,
+TAE80213,"Graduate Diploma of Adult Language, Literacy and Numeracy Leadership",Current,,
+TAE80316,Graduate Certificate in Digital Education,Current,,

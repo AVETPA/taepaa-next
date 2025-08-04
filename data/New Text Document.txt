@@ -1,0 +1,20 @@
+{
+  "qualifications": [
+    {
+      "nrtType": "Certificate III",
+      "code": "SIT30821",
+      "title": "Certificate III in Commercial Cookery",
+      "release": "4",
+      "status": "Current",
+      "trainingPackage": "SIT - Tourism, Travel and Hospitality"
+    }
+  ],
+  "units": [
+    {
+      "code": "SITHFAB002",
+      "title": "Provide responsible service of alcohol",
+      "status": "Superseded",
+      "essential": "Core"
+    }
+  ]
+}
