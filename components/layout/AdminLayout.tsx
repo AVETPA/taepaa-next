@@ -1,4 +1,7 @@
-import { NavLink } from 'react-router-dom';
+"use client";
+
+import { useState } from 'react';
+import Link from 'next/link';
 import {
   FaUsers,
   FaCalendarAlt,
@@ -7,12 +10,11 @@ import {
   FaUserCircle,
   FaChartBar
 } from 'react-icons/fa';
-import { useState } from 'react';
-import AdminAddEvent from '../../pages/admin/AdminAddEvent';
-import useAuth from '../../hooks/useAuth'; // Add your Supabase-auth hook
+import AdminAddEvent from "@/components/admin/AdminAddEvent";
+import useAuth from '@/hooks/useAuth';
 
-export default function AdminLayout({ children }) {
-  const { user } = useAuth(); // ✅ Get Supabase user
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
   const [showAddEvent, setShowAddEvent] = useState(false);
 
   return (
@@ -23,18 +25,18 @@ export default function AdminLayout({ children }) {
 
         <nav className="flex-1 overflow-y-auto">
           <Section title="Main">
-            <NavItem icon={<FaChartBar />} to="/admindashboard" label="Dashboard" />
+            <NavItem icon={<FaChartBar />} href="/admin" label="Dashboard" />
           </Section>
 
           <Section title="Directories">
-            <NavItem icon={<FaUsers />} to="/admin/userlist" label="Users" />
-            <NavItem icon={<FaCalendarAlt />} to="/admin/pdcalendar" label="PD Calendar" />
+            <NavItem icon={<FaUsers />} href="/admin/userlist" label="Users" />
+            <NavItem icon={<FaCalendarAlt />} href="/admin/pdcalendar" label="PD Calendar" />
             <NavItem icon={<FaCalendarAlt />} label="Add Event" onClick={() => setShowAddEvent(true)} />
-            <NavItem icon={<FaFileAlt />} to="/admin/uploads" label="Uploads" />
+            <NavItem icon={<FaFileAlt />} href="/admin/uploads" label="Uploads" />
           </Section>
 
           <Section title="System">
-            <NavItem icon={<FaCog />} to="/admin/settings" label="Settings" />
+            <NavItem icon={<FaCog />} href="/admin/settings" label="Settings" />
           </Section>
         </nav>
 
@@ -74,7 +76,12 @@ export default function AdminLayout({ children }) {
   );
 }
 
-function NavItem({ icon, to, label, onClick }) {
+function NavItem({ icon, href, label, onClick }: {
+  icon: React.ReactNode;
+  href?: string;
+  label: string;
+  onClick?: () => void;
+}) {
   const baseClasses = 'flex items-center gap-3 px-6 py-3 text-sm hover:bg-gray-700';
 
   if (onClick) {
@@ -87,19 +94,19 @@ function NavItem({ icon, to, label, onClick }) {
   }
 
   return (
-    <NavLink
-      to={to}
-      className={({ isActive }) =>
-        `${baseClasses} ${isActive ? 'bg-gray-800 font-bold' : 'text-gray-300'}`
-      }
+    <Link
+      href={href || '#'}
+      className={baseClasses + ' text-gray-300 block'}
     >
-      {icon}
-      {label}
-    </NavLink>
+      <div className="flex items-center gap-3">
+        {icon}
+        {label}
+      </div>
+    </Link>
   );
 }
 
-function Section({ title, children }) {
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mt-4">
       <p className="px-6 mb-2 text-xs uppercase tracking-wide text-gray-400">{title}</p>
