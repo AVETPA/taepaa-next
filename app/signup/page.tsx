@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import Signup from './Signup'; // Assuming Signup is a client component
+import Signup from '@/components/auth/Signup';
 
 export default function SignupPage() {
   return (
